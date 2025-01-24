@@ -16,9 +16,9 @@ The dataset includes match details such as:
 - **Tournament**: Type of match (e.g., Friendly, Qualifier).
 - **Location**: City and country of the match, and whether it was neutral ground.
 
-Focus: Goals scored by England in both home and away matches.
+**Focus**: Goals scored by England in both home and away matches.
 
-Dataset source: [Kaggle Dataset](https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017/data)
+**Dataset source**: [Kaggle Dataset](https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017/data)
 
 ---
 
