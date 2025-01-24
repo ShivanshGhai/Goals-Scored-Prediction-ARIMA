@@ -1,100 +1,79 @@
-# ELI5 ReadMe
+# Predicting Football Goals Using Time Series Analysis and ARIMA
 
-**Objective:**
-This project uses historical data about the goals scored by a football team to predict how many goals they might score in the future. By looking at how the team’s performance has changed over the years, we use a method called Time Series Analysis to make future predictions. For this project, we focused on predicting goals scored by **England** based on both home and away performance.
+## **Objective**
 
-Imagine you’re trying to guess how many goals England will score next year. You look at how many goals they scored in previous years, and from there, you try to find patterns or trends that can help you predict their performance. This is exactly what we did in this project!
+This project leverages historical football match data to forecast the goals scored by the England football team (only for this example, can easily replace it with any other interantional men's football team) in future years. Using the ARIMA (AutoRegressive Integrated Moving Average) model, we analyze historical trends and patterns to predict performance while accounting for uncertainty.
 
+---
 
-Time series analysis might sound complicated, but it’s just about looking at data points over time to understand patterns and make predictions. Here are the key steps we followed:
+## **Data**
 
-**1. **Data Preprocessing****
+The dataset includes match details such as:
 
-**What did we look at?** We just used a dataset available on football matches that England played in. 
+- **Home Team and Away Team**: Names of teams playing.
+- **Scores**: Goals scored by home and away teams.
+- **Match Date**: Date when the match occurred.
+- **Tournament**: Type of match (e.g., Friendly, Qualifier).
+- **Location**: City and country of the match, and whether it was neutral ground.
 
-The data includes:
+Focus: Goals scored by England in both home and away matches.
 
-    The year of the match
-  
-    The goals scored by England when they played at home or away
-  
-    The type of match and the location where it was played.
+Dataset source: [Kaggle Dataset](https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017/data)
 
-Kaggle link: https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017/data
-  
-**Why is this important?** By using this data, we can see how the team’s performance has changed over the years, which will help us make predictions about future performance.
+---
 
-**2. Preparing the Data**
+## **Steps Involved**
 
-**Cleaning the Data:** We took the data and made sure it was ready for analysis. 
+1. **Data Preprocessing**
+   - Converted match dates into a standard format.
+   - Ensured scores were numeric for accurate calculations.
+   - Extracted years and aggregated yearly goals for England.
 
-This involved:
+2. **Aggregating Goals Scored**
+   - Calculated yearly totals for:
+     - **Home Goals**
+     - **Away Goals**
+     - **Total Goals** (sum of home and away).
 
-    Making sure the dates were formatted correctly.
-  
-    Converting the goals scored in each match into numbers that a computer can understand.
-  
-    Grouping the data by year, so we could analyze how many goals England scored each year.
-  
-**Why this matters?** Clean, well-organized data is necessary for the computer to understand and make accurate predictions.
+3. **Time Series Construction**
+   - Created a time series object in R using yearly goal totals for analysis and forecasting.
 
-**3. Understanding the Patterns in the Data**
+4. **Stationarity Check**
+   - Performed a Dickey-Fuller (ADF) test to verify stationarity.
+   - Applied differencing to stabilize trends and make the data suitable for ARIMA.
 
-**Looking for Trends:**
+5. **ARIMA Modeling**
+   - Used the `auto.arima()` function in R to select the best ARIMA configuration.
+   - Model components:
+     - **AR**: How past values influence current ones.
+     - **I**: Addressed trends by differencing.
+     - **MA**: Incorporated past prediction errors.
 
-We looked at the goals scored each year to see if there were any patterns. Did England score more goals in some years than others? Were there years with unusually high or low scores?
+6. **Model Evaluation and Diagnostics**
+   - Checked residuals to confirm the model captured significant patterns:
+     - ACF and PACF plots of residuals verified no autocorrelation.
+     - Histogram of residuals ensured normality.
+   - Forecasted goals for future years with confidence intervals.
 
-We found that the data wasn’t smooth – it had ups and downs, making it hard to predict future performance directly.
+7. **Results and Interpretation**
+   - Forecasts showed stable performance but significant uncertainty due to data variability.
+   - Wide confidence intervals highlighted potential fluctuations in predictions.
 
-**What did we do next?** To handle this, we removed the trends from the data, so we could focus on the important patterns that would help us make accurate predictions.
+8. **Limitations and Future Work**
+   - **Data Limitations**: Excluded external factors like player injuries or team dynamics.
+   - **Model Improvements**: ARIMA assumes linear relationships. Machine learning models may capture more complex patterns.
+   - **Broader Analysis**: Extending to other teams could provide comparative insights.
 
-**4. Choosing the Right Model (ARIMA)**
+---
 
-**What is ARIMA?** ARIMA is a method used to predict future values in a time series by looking at past values. It looks at how past performances (goals scored) can help predict future performances.
+## **Key Results**
 
-  ARIMA is made up of three parts:
+- The ARIMA model predicted consistent performance for England's goals, with notable variability.
+- Residual diagnostics confirmed a good model fit, with no significant patterns remaining.
+- Confidence intervals indicated uncertainty, underscoring the model’s limitations with the available data.
 
-    AR (AutoRegressive): Looks at how past values influence current values.
-  
-    I (Integrated): Deals with any trends or patterns in the data that need to be removed.
-  
-    MA (Moving Average): Looks at the past prediction errors to make the model more accurate.
-  
-**Why ARIMA?**
-ARIMA is widely used for time series analysis, and it works well for data like this where there are fluctuations over time, like the number of goals scored by a team.
+---
 
-**5. Making Predictions**
+## **Conclusion**
 
-After setting up the ARIMA model, we used it to predict how many goals England will score in the future (for the next 5 years).
-
-**What did we find?** The model predicted that England’s goal-scoring would stay fairly consistent, but there is a lot of uncertainty in the predictions because the data has lots of fluctuations over time.
-
-So, while the forecast suggests a stable performance, the wide range of possible outcomes shows that there is a lot of uncertainty.
-
-**6. Checking the Model’s Performance**
-
-**Residuals Analysis:** After making predictions, we looked at the residuals, which are the differences between what the model predicted and what actually happened.
-
-    If the residuals are random (no patterns), it means our model is working well.
-    
-    We checked the residuals and found that there were no obvious patterns, which means our model fit the data well.
-
-
-**Why is this important?** This step ensures that our model is doing a good job at capturing all the important patterns in the data, and we’re not missing anything significant.
-
-**7. Visualizing the Results**
-
-**Time Series Plot:** We plotted the goals scored by England over time to visually inspect how their performance changed.
-
-**Forecast Plot:** We created a plot showing the predicted goals for the next few years. The plot also includes confidence intervals, which represent the uncertainty around our predictions.
-
-**Residual Plot:** We plotted the residuals to ensure there were no patterns left in the data. This confirmed that our model did a good job at capturing the patterns in England’s goal-scoring performance.
-
-
-**Conclusion**
-
-In simple terms, this project takes historical data about England’s football matches, analyzes it to find patterns, and uses those patterns to predict future performance. We used a method called ARIMA to make our predictions, and we found that England’s goal-scoring performance seems to be fairly stable, but there’s still a lot of uncertainty.
-
-While the ARIMA model provides good forecasts, the wide confidence intervals show that there’s a lot of variability in England’s goal-scoring, meaning our predictions could change significantly depending on many factors.
-
-This is just the beginning of how you could use time series analysis to predict sports performance. There are other techniques and factors we could explore in the future, such as seasonal effects or team composition changes, which could make our predictions more accurate.
+This project demonstrated the power of time series analysis in sports analytics, using historical data to forecast England's football performance. While the ARIMA model provided valuable insights, incorporating additional factors and exploring advanced modeling techniques could enhance prediction accuracy in future studies.
